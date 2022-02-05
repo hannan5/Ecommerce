@@ -13,18 +13,11 @@ exports.createUser = AsyncError( async (req, res)  =>{
             url:'ThisissampleUrl',
         }
     })
-    // const token = user.getJWTToken()
-    // res.status(200).json({
-    //     success:true,
-    //     user,
-    //     token,
-    // })
     sentToken(user,201,res)
 
 })
 
 //Login user
-
 exports.loginUser = AsyncError(async(req,res, next)=>{
     const {email,password} = req.body
 
@@ -41,11 +34,20 @@ exports.loginUser = AsyncError(async(req,res, next)=>{
     if(!passwordMatched){
         return next(new ErrorHandler('Please input valid Email and Password',404))
     }
-    // const token = user.getJWTToken()
-    // res.status(200).json({
-    //     success:true,
-    //     user,
-    //     token,
-    // })
+   
     sentToken(user,200,res)
-}) 
+})
+
+//Logout User
+
+exports.logOut = AsyncError( async(req,res)=>{
+    res.cookie('token',null,{
+        expires:new Date(Date.now()),
+        httpOnly:true,
+    })
+    res.status(200).json({
+        success:true,
+        message:'User is logout'
+    })
+})
+

@@ -9,7 +9,7 @@ const cookieparse = require('cookie-parser')
 app.use(express.json())
 app.use(bodyparse.urlencoded({extended:true}))
 app.use(bodyparse.json())
-// app.use(cookieparse)
+app.use(cookieparse())
 
 //Middleware For Errors
 app.use(errorMiddleware)
