@@ -1,0 +1,19 @@
+.loading{
+    width: 100%;
+    height: 100vh;
+    background-color: #fff;
+    display: grid;
+    place-items: center;
+}
+.loading div{
+    width: 120px;
+    height: 120px;
+    border-bottom: 5px solid rgb(112, 112, 112);
+    border-radius: 50%;
+    animation: loading 800ms linear infinite;
+}
+@keyframes loading {
+    to{
+        transform: rotateZ(360deg);
+    }
+}

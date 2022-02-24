@@ -1,0 +1,54 @@
+.footer{
+    display: flex;
+    align-items: center;
+    margin-top: 150px;
+    background-color: #252424;
+    color: #fff;
+    padding: 30px;
+}
+.righfoot{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    text-align: center;
+    align-items: center;
+}
+.righfoot p{
+    font-size: 20px;
+}
+.righfoot img{
+    width: 200px;
+    margin: 25px 0;
+    cursor: pointer;
+}
+
+.midfoot{
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    text-align: center;
+}
+.midfoot h2{
+    font-size: 40px;
+    font-family: sans-serif;
+    color: #1f7394;
+}
+.midfoot p{
+    font-size: 17px;
+    line-height: 5px;
+}
+.leftfoot{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    text-align: center;
+}
+.leftfoot h4{
+    font-size: 20px;
+}
+.leftfoot a{
+    font-size: 15px;
+    text-decoration: none;
+    color: #fff;
+    margin: 5px;
+}

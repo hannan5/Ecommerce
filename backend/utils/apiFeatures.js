@@ -31,7 +31,7 @@ class ApiFeatures {
     }
 
     pagination(productPerPage) {
-        let currentpage = this.querystr.page || 1
+        let currentpage = Number(this.querystr.page) || 1
         // 5 * (2 - 1)
         const skip = productPerPage * (currentpage - 1)
 

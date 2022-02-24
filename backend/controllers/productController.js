@@ -18,7 +18,7 @@ exports.createProducts = AsyncError(async (req, res) => {
 
 exports.getAllproducts = AsyncError(async (req, res) => {
 
-    const productPerPage = 5;
+    const productPerPage = 3;
     const productCount = await Product.countDocuments()
 
     const ApiFeature = new ApiFeatures(Product.find(), req.query).search().filter().pagination(productPerPage)
@@ -26,8 +26,20 @@ exports.getAllproducts = AsyncError(async (req, res) => {
     res.status(200).json({
         success: true,
         product,
-        productCount
+        productCount,
+        productPerPage,
     })
+    console.log(productCount);
+    console.log(productPerPage);
+ // .pagination(productPerPage)
+    
+//  let product = await ApiFeature.query
+
+//  let productFilterCount = product.length
+
+//  ApiFeature.pagination(productPerPage)
+ // product = await ApiFeature.query;
+
 });
 
 // Update Products --Admin
@@ -72,3 +84,95 @@ exports.getSingleProducts = AsyncError(async (req, res, next) => {
         product,
     })
 });
+
+exports.productReview = AsyncError(async (req, res, next) => {
+
+    const { rating, comment, productId } = req.body;
+
+    const review = {
+        user: req.user._id,
+        name: req.user.name,
+        rating,
+        comment
+    }
+
+    const product = await Product.findById(productId)
+    // console.log(product.name);
+    const isreviewd = product.reviews.find((rev) => rev.user.toString() === req.user._id.toString())
+    if (isreviewd) {
+        product.reviews.forEach((rev) => {
+            if (rev.user.toString() === req.user._id.toString())
+                (rev.rating = rating), (rev.comment = comment)
+        })
+        res.status(200).json({
+            success: true,
+            message: 'ALready review'
+        })
+    } else {
+        product.reviews.push(review)
+        product.numberOfReviews = product.reviews.length
+    }
+
+    let avg = 0;
+    product.reviews.forEach((rev) => {
+        avg += rev.rating
+    })
+    product.ratings = avg / product.reviews.length;
+
+    await product.save({ validateBeforeSave: false })
+    res.status(200).json({
+        success: true,
+        message: 'Notr ALready review'
+    })
+})
+
+
+// get all Reviews
+
+exports.getAllReview = AsyncError(async (req, res, next) => {
+    const product = await Product.findById(req.query.id)
+    const reviews = product.reviews
+    if (!product) {
+        return next(new ErrorHandler('Product not Found', 404))
+    }
+    res.status(200).json({
+        success: true,
+        reviews,
+    })
+})
+
+// Delete  Review
+
+exports.deleteReview = AsyncError(async (req, res, next) => {
+    const product = await Product.findById(req.query.productId)
+    if (!product) {
+        return next(new ErrorHandler('Product not Found', 404))
+    }
+
+    const reviews = product.reviews.filter(rev => rev._id.toString() !== req.query.id.toString())
+
+    let avg = 0;
+    reviews.forEach((rev) => {
+        avg += rev.rating
+    })
+    const ratings = avg / reviews.length;
+
+    const numberOfReviews = reviews.length;
+
+    await Product.findByIdAndUpdate(req.query.productId, {
+        ratings,
+        numberOfReviews,
+        reviews
+    },
+        {
+            new: true,
+            runValidators: true,
+
+        }
+    )
+
+    res.status(200).json({
+        success: true,
+        reviews,
+    })
+})
